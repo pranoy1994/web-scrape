@@ -81,12 +81,14 @@ router.get('/scrape5', (req, res) => {
   );
 });
 
+
+//----------------------------------------------------------------
+var theArray = [];
 //this is the working route
 router.post('/scrape6', (req, res) => {
 var iamtheurl= req.body.url;
-  console.log(iamtheurl);
+  //console.log(iamtheurl);
   var options = {
-   // url: "http://tourneymachine.com/Public/Results/Division.aspx?IDTournament=h20171018142428327245ada17a12c44&IDDivision=h201710181438463598c0556dae69544",
    url : iamtheurl, 
    headers: {
       'User-Agent': 'request'
@@ -95,22 +97,144 @@ var iamtheurl= req.body.url;
    
   function callback(error, response, body) {
 
-    var tablesAsJson = tabletojson.convert(body);
-    var arr  = [];
-    var index = 2
-    tablesAsJson.forEach((d) => {
-      if(d[0].hasOwnProperty('Team') && d[0].hasOwnProperty('W')) {
-        arr.push(d);
-      }
 
-      if(d[0].hasOwnProperty('Team_'+ index) && d[0].hasOwnProperty('W_'+ index)) {
-        arr.push(d);
-        index++;
-      }
-      //index++;
+
+    $ = cheerio.load(body);
+    links = $('a'); //jquery get all hyperlinks
+    $(links).each(function(i, link){
+      //console.log($(link).text() + ':\n  ' + $(link).attr('href'));
+      theArray.push({text : $(link).text().trim(), link: $(link).attr('href')});
     });
-    res.send(arr);
+
+
+
+    var tablesAsJson = tabletojson.convert(body);
+    var arr = convertTable (tablesAsJson);
+    var newArr = []
+    arr[0].forEach((theObj) => {
+      theArray.forEach((t) => {
+        if(t.text == theObj.Team) {
+          theObj.TeamLink = t.link;
+        }
+      });
+      newArr.push(theObj);
+    });
+    res.send([newArr]);
  }
   request(options, callback);
 });
+
+//this function converts the table to the required json format 
+function convertTable (tablesAsJson) {
+
+  var arr  = [];
+  var index = 2
+  tablesAsJson.forEach((d) => {
+    if(d[0].hasOwnProperty('Team') && d[0].hasOwnProperty('W')) {
+      arr.push(d);
+    }
+
+    if(d[0].hasOwnProperty('Team_'+ index) && d[0].hasOwnProperty('W_'+ index)) {
+      arr.push(d);
+      index++;
+    }
+  });
+ return arr;
+
+
+}
+
+
+function getTeamInfo(teamName) {
+
+  var theLink;//this link will contain the performance report of the team that are in the table
+  theArray.forEach((obj) => {
+    if(obj.text == teamName) {
+      theLink = obj.link;
+    }
+  });
+
+  var options = {
+    // url: "http://tourneymachine.com/Public/Results/Division.aspx?IDTournament=h20171018142428327245ada17a12c44&IDDivision=h201710181438463598c0556dae69544",
+    url : "http://tourneymachine.com/Public/Results/"+theLink, 
+    headers: {
+       'User-Agent': 'request'
+     }
+   };
+   return theLink;
+}
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------
+
+router.post("/the-scrape", (req, res) => {
+
+  var iamtheurl= req.body.url;
+  //console.log(iamtheurl);
+  var options = {
+   url : iamtheurl, 
+   headers: {
+      'User-Agent': 'request'
+    }
+  };
+
+
+     
+  function callback(error, response, body) {
+    var tablesAsJson = tabletojson.convert(body);
+    var theFinalData = getTheInsideData(tablesAsJson);
+    res.send(theFinalData);
+    //res.send(tablesAsJson);
+  }
+    request(options, callback);
+
+
+
+
+});
+
+function getTheInsideData(theTeamData) {
+
+  var theReqData = [];
+  theTeamData[4].forEach((theObject) => {
+    if(theObject.hasOwnProperty('Team')) {
+      theReqData.push(theObject);
+    }
+  });
+
+  return theReqData;
+}
+//-----------------------------
+
+var linkscrape = require("linkscrape");
+
+//this will be the test route
+router.post('/test-scrape', (req, res) => {
+
+  console.log("here 1");
+  var url= req.body.url;
+
+  var options = {
+    // url: "http://tourneymachine.com/Public/Results/Division.aspx?IDTournament=h20171018142428327245ada17a12c44&IDDivision=h201710181438463598c0556dae69544",
+    url : url, 
+    headers: {
+       'User-Agent': 'request'
+     }
+   };
+  request(options, function(err, resp, body){
+  $ = cheerio.load(body);
+  links = $('a'); //jquery get all hyperlinks
+  var theArray = [];
+  $(links).each(function(i, link){
+    //console.log($(link).text() + ':\n  ' + $(link).attr('href'));
+    theArray.push({text : $(link).text().trim(), link: $(link).attr('href')});
+  });
+  res.send(theArray);
+});
+
+});
+
 module.exports = router;
