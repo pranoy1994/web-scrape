@@ -114,12 +114,42 @@ var iamtheurl= req.body.url;
     arr[0].forEach((theObj) => {
       theArray.forEach((t) => {
         if(t.text == theObj.Team) {
-          theObj.TeamLink = t.link;
+          theObj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
         }
       });
       newArr.push(theObj);
     });
-    res.send([newArr]);
+
+
+    var theArr2 = [];
+    newArr.forEach((theObj) => {
+
+
+      var options = {
+        url : theObj.TeamLink, 
+        headers: {
+           'User-Agent': 'request'
+         }
+       };
+
+
+       function callback2(error, response, body) {
+        var tablesAsJson = tabletojson.convert(body);
+        var theFinalData = getTheInsideData(tablesAsJson);
+        theObj.teamData = theFinalData;
+        theArr2.push(theObj);
+        //res.send(tablesAsJson);
+        if(theArr2.length == newArr.length)
+        res.send([theArr2]);
+      }
+        request(options, callback2);
+    });
+   
+  
+
+
+
+    //res.send([newArr]);
  }
   request(options, callback);
 });
