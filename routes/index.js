@@ -140,7 +140,7 @@ var iamtheurl= req.body.url;
         theArr2.push(theObj);
         //res.send(tablesAsJson);
         if(theArr2.length == newArr.length)
-        res.send([theArr2]);
+        //res.send([theArr2]);
       }
         request(options, callback2);
     });
@@ -149,7 +149,7 @@ var iamtheurl= req.body.url;
 
 
 
-    //res.send([newArr]);
+    res.send([newArr]);
  }
   request(options, callback);
 });
