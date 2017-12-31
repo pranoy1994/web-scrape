@@ -156,7 +156,7 @@ var iamtheurl= req.body.url;
 
 
 
-    res.send([arr]);
+    res.send([newArr]);
  }
   request(options, callback);
 });
