@@ -116,7 +116,7 @@ var iamtheurl= req.body.url;
       theObj.forEach((obj) => {
       theArray.forEach((t) => {
         if(t.text == obj.Team) {
-          theObj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
+          obj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
         }
       });
       
