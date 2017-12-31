@@ -111,14 +111,14 @@ var iamtheurl= req.body.url;
     var tablesAsJson = tabletojson.convert(body);
     var arr = convertTable (tablesAsJson);
     var newArr = []
-    arr[0].forEach((theObj) => {
-      theArray.forEach((t) => {
-        if(t.text == theObj.Team) {
-          theObj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
-        }
-      });
-      newArr.push(theObj);
-    });
+//     arr[0].forEach((theObj) => {
+//       theArray.forEach((t) => {
+//         if(t.text == theObj.Team) {
+//           theObj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
+//         }
+//       });
+//       newArr.push(theObj);
+//     });
 
 
 //     var theArr2 = [];
@@ -149,7 +149,7 @@ var iamtheurl= req.body.url;
 
 
 
-    res.send([newArr]);
+    res.send([arr]);
  }
   request(options, callback);
 });
