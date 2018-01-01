@@ -161,7 +161,7 @@ var iamtheurl= req.body.url;
         theArr2.push(theObj);
         console.log(newArr.length);
         if(teamCounter == theArr2.length){
-          res.send([theArr2]);
+          res.send([theArr2, newArr.length, teamCounter]);
         }
         // if(newArr.length == i+1) {
         //   res.send(theArr2); 
