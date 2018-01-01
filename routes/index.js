@@ -110,53 +110,80 @@ var iamtheurl= req.body.url;
 
     var tablesAsJson = tabletojson.convert(body);
     var arr = convertTable (tablesAsJson);
-    var newArr = []
-    arr[0].forEach((theObj) => {
+    var newArr = [];
+    var teamCounter=0;
+    arr.forEach((theObj, i) => {
       
-      theObj.forEach((obj) => {
-      theArray.forEach((t) => {
-        if(t.text == obj.Team) {
-          obj.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
-        }
+      theObj.forEach((x) => {
+        //console.log(x);
+        teamCounter++;
+        theArray.forEach((t) => {
+          //console.log(i);
+          if(i==0) {
+            if(t.text == x['Team']) {
+            x.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
+            //console.log(x);
+          }
+          }else {
+            if(t.text == x['Team_' + (i+1)]) {
+            x.TeamLink = "http://tourneymachine.com/Public/Results/" + t.link;
+            console.log(x);
+          }
+          }
+          
+          
       });
-      
-      
       });
-      
       
       newArr.push(theObj);
+      
     });
 
 
-//     var theArr2 = [];
-//     newArr.forEach((theObj) => {
+    var theArr2 = [];
+    newArr.forEach((obj, i) => {
+      obj.forEach((theObj) => {
+
+      
+
+      var options = {
+        url : theObj.TeamLink, 
+        headers: {
+           'User-Agent': 'request'
+         }
+       };
 
 
-//       var options = {
-//         url : theObj.TeamLink, 
-//         headers: {
-//            'User-Agent': 'request'
-//          }
-//        };
-
-
-//        function callback2(error, response, body) {
-//         var tablesAsJson = tabletojson.convert(body);
-//         var theFinalData = getTheInsideData(tablesAsJson);
-//         theObj.teamData = theFinalData;
-//         theArr2.push(theObj);
-//         //res.send(tablesAsJson);
-//         if(theArr2.length == newArr.length)
-//         //res.send([theArr2]);
-//       }
-//         request(options, callback2);
-//     });
+       function callback2(error, response, body) {
+        var tablesAsJson = tabletojson.convert(body);
+        var theFinalData = getTheInsideData(tablesAsJson);
+        theObj.teamData = theFinalData;
+        theArr2.push(theObj);
+        console.log(newArr.length);
+        if(teamCounter == theArr2.length){
+          res.send([theArr2]);
+        }
+        // if(newArr.length == i+1) {
+        //   res.send(theArr2); 
+        // }
+        //res.send(theArr2); 
+        //console.log(theArr2);
+        //res.send(tablesAsJson);
+        // if(theArr2.length == newArr.length){
+        //     res.send([theArr2]);
+        // }
+        
+      }
+        request(options, callback2);
+      });
+    });
    
+  
   
 
 
-
-    res.send([newArr]);
+    //res.send(newArr);
+    //res.send(theArray);
  }
   request(options, callback);
 });
