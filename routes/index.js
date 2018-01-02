@@ -163,7 +163,7 @@ var iamtheurl= req.body.url;
             var obj = {
               '6' : s['6'],
               Team : s.Team,
-              "Score" : s.score,
+              "Score" : s.Score,
             "Team_2" : s['Team_2']
             }
           final.push(obj);
