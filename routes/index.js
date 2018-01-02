@@ -157,7 +157,18 @@ var iamtheurl= req.body.url;
        function callback2(error, response, body) {
         var tablesAsJson = tabletojson.convert(body);
         var theFinalData = getTheInsideData(tablesAsJson);
-        theObj.teamData = theFinalData;
+
+        var final = [];
+        theFinalData.forEach(function(s) {
+            var obj = {
+              '6' : s['6'],
+              Team : s.Team,
+              "Score" : s.score,
+            "Team_2" : s['Team_2']
+            }
+          final.push(obj);
+        });
+        theObj.teamData = final;
         theArr2.push(theObj);
         console.log(newArr.length);
         if(teamCounter == theArr2.length){
