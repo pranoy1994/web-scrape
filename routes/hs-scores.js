@@ -24,21 +24,24 @@ router.post('/get-hs-scores', (req, res) => {
         var theScores = [];
 
         $('.tabContent').each(function() {
-            if($(this).attr('style') == "display: block;") {
-                var scores = [];
-                $(this).children().each(function(i) {
-                    if(!$(this).is('p')){
-                        //console.log(sendTheScoresPerTable(this));
-                        scores.push(sendTheScoresPerTable(this));
-                    }
-                    else {
-                        scores = [];
-                        theScores.push({
-                        date: $(this).html(), 
-                            scores: scores
-                        });
-                    }
-                })
+			console.log($(this).prev().prev().find('b').html());
+			if($(this).prev().prev().find('b').html() != "Non-conference") {
+                if($(this).attr('style') == "display: block;") {
+                    var scores = [];
+                    $(this).children().each(function(i) {
+                        if(!$(this).is('p')){
+                            //console.log(sendTheScoresPerTable(this));
+                            scores.push(sendTheScoresPerTable(this));
+                        }
+                        else {
+                            scores = [];
+                            theScores.push({
+                            date: $(this).html(), 
+                                scores: scores
+                            });
+                        }
+                    })
+                }
             }
         })
         function sendTheScoresPerTable(element) {
