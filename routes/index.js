@@ -69,6 +69,8 @@ router.get('/scrape4', (req, res) => {
     res.send(err);
   });
 }); 
+
+
 var tabletojson = require('tabletojson');
 router.get('/scrape5', (req, res) => {
   tabletojson.convertUrl(
@@ -138,7 +140,8 @@ var iamtheurl= req.body.url;
       newArr.push(theObj);
       
     });
-
+    
+    //res.send(newArr);
 
     var theArr2 = [];
     newArr.forEach((obj, i) => {
@@ -155,8 +158,39 @@ var iamtheurl= req.body.url;
 
 
        function callback2(error, response, body) {
-        var tablesAsJson = tabletojson.convert(body);
-        var theFinalData = getTheInsideData(tablesAsJson);
+        // var tablesAsJson = tabletojson.convert(body);
+        // var theFinalData = getTheInsideData(tablesAsJson);
+
+
+        var $ = cheerio.load(body);
+
+        var theScore = [];
+        $('.schedule_row').each(function(index, value) {
+          
+          var score = {}
+          $(value).find('td').each(function(i) {
+            
+            if($(this).html().trim() != ""){
+              if(i>2){
+              
+                console.log($(this).text().trim())
+                if(i == 3) score['Team'] = $(this).text().trim();
+                if(i == 4) score['Score'] = $(this).text().trim();
+                if(i == 5) score['Team_2'] = $(this).text().trim();
+                if(i == 6) {
+                   score['6'] = $(this).text().trim();
+                    theScore.push(score);
+                }
+              }
+            }
+            
+          })
+          
+          
+        })
+        var theFinalData = theScore;
+
+
 
         var final = [];
         theFinalData.forEach(function(s) {
@@ -193,8 +227,8 @@ var iamtheurl= req.body.url;
   
 
 
-    //res.send(newArr);
-    //res.send(theArray);
+    // res.send(newArr);
+    // res.send(theArray);
  }
   request(options, callback);
 });
