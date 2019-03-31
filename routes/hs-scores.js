@@ -50,7 +50,7 @@ router.post('/get-hs-scores', (req, res) => {
                 var theObj = {};
                 $(this).find('th').each(function(i) {
                     if(i == 0){
-                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/)./g, "");
+                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/\)./g, "");
                     }else {
                         theObj.value = $(this).html().trim();
                         theScores.push(theObj);
@@ -59,13 +59,13 @@ router.post('/get-hs-scores', (req, res) => {
                 })
                 $(this).find('td').each(function(j) {
                     if(j == 0){
-                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/)./g, "");
+                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/\)./g, "");
                     }else if(j == 1){
                         theObj.value = $(this).html().trim();
                         theScores.push(theObj);
                         theObj = {};
                     }else if(j == 2){
-                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/)./g, "");
+                        theObj.key = $(this).html().trim().replace(/\./g, "").replace(/\(/g, "").replace(/\)./g, "");
                     }else {
                         theObj.value = $(this).html().trim();
                         theScores.push(theObj);
