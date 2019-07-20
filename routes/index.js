@@ -102,10 +102,10 @@ var iamtheurl= req.body.url;
 
 
     $ = cheerio.load(body);
-    links = $('a'); //jquery get all hyperlinks
+    links = $('td'); //jquery get all hyperlinks
     $(links).each(function(i, link){
       //console.log($(link).text() + ':\n  ' + $(link).attr('href'));
-      theArray.push({text : $(link).text().trim(), link: $(link).attr('href')});
+      theArray.push({text : $(link).text().trim(), link: $(link).find('a').attr('href')});
     });
 
 
